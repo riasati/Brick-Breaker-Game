@@ -20,17 +20,21 @@ public class BallScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gm.gameFreeze)
+        {
+            return;
+        }
         if (!GameManagement.IsBallMove)
         {
             InitializeBall();
         }
-        if (Input.GetMouseButtonDown(0) && GameManagement.IsBallMove == false)
+        if (Input.GetMouseButtonDown(0) && GameManagement.IsBallMove == false )
         {
             GameManagement.IsBallMove = true;
             AddForceToBall();
         }
     }
-    void InitializeBall()
+    public void InitializeBall()
     {
         Vector3 paddlePos = paddle.transform.position;
         Vector3 ballPos = new Vector3(paddlePos.x, paddlePos.y + 0.5f, paddlePos.z);
@@ -41,13 +45,13 @@ public class BallScript : MonoBehaviour
     {
         Random rnd = new Random();
         int horizontalForce = rnd.Next(100, 300);
-        if (rnd.Next(0, 1) % 2 == 0)
+        if (rnd.Next(0, 2) % 2 == 0)
         {
             horizontalForce = horizontalForce * -1;
         }
         int verticalForce = rnd.Next(100, 300);
         rb.AddForce(transform.up * verticalForce + transform.right * horizontalForce);
-        rb.velocity = new Vector2(GameManagement.currentLevel, GameManagement.currentLevel);
+        rb.velocity = new Vector2(GameManagement.currentLevel * 2, GameManagement.currentLevel * 2);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -55,7 +59,6 @@ public class BallScript : MonoBehaviour
         if (other.CompareTag("DeathZone"))
         {
             GameManagement.IsBallMove = false;
-            InitializeBall();
             gm.UpdateLives(-1);
         }
     }
@@ -64,10 +67,13 @@ public class BallScript : MonoBehaviour
     {
         if (other.transform.CompareTag("Brick"))
         {
-            Transform newExplosion = Instantiate(explosion, other.transform.position, other.transform.rotation);
+            // Transform newExplosion = Instantiate(explosion, other.transform.position, other.transform.rotation);
             gm.UpdateScores(other.gameObject.GetComponent<BrickScript>().point);
-            Destroy(newExplosion.gameObject,2.5f);
-            Destroy(other.gameObject);
+            gm.UpdateNoBricks(-1);
+            other.gameObject.GetComponent<BrickScript>().createPowerUp();
+            other.gameObject.GetComponent<BrickScript>().createExplosion();
+            // Destroy(other.gameObject);
+            // Destroy(newExplosion.gameObject,2.5f);
         }
     }
 }

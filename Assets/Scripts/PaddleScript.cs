@@ -6,6 +6,7 @@ using UnityEngine;
 public class PaddleScript : MonoBehaviour
 {
     public Camera mainCamera;
+    public GameManagement gm;
 
     float leftMax = 123;
 
@@ -19,6 +20,10 @@ public class PaddleScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gm.gameFreeze)
+        {
+            return;
+        }
         Movement();
     }
 
@@ -27,5 +32,14 @@ public class PaddleScript : MonoBehaviour
         float movemnetValue = Mathf.Clamp(Input.mousePosition.x, leftMax, rightMax);
         float worldXPos = mainCamera.ScreenToWorldPoint(new Vector3(movemnetValue, 0f, 0f)).x;
         this.transform.position = new Vector3(worldXPos,-4f,0);        
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("ExtraLifePowerUp"))
+        {
+            gm.UpdateLives(1);
+            Destroy(other.gameObject);
+        }
     }
 }

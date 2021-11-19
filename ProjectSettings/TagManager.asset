@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DeathZone
   - Brick
+  - ExtraLifePowerUp
   layers:
   - Default
   - TransparentFX
