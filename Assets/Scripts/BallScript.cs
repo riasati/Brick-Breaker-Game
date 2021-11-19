@@ -10,6 +10,8 @@ public class BallScript : MonoBehaviour
     // Start is called before the first frame update
     public PaddleScript paddle;
     public Rigidbody2D rb;
+    public Transform explosion;
+    public GameManagement gm;
     void Start()
     {
         
@@ -54,6 +56,18 @@ public class BallScript : MonoBehaviour
         {
             GameManagement.IsBallMove = false;
             InitializeBall();
+            gm.UpdateLives(-1);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.transform.CompareTag("Brick"))
+        {
+            Transform newExplosion = Instantiate(explosion, other.transform.position, other.transform.rotation);
+            gm.UpdateScores(other.gameObject.GetComponent<BrickScript>().point);
+            Destroy(newExplosion.gameObject,2.5f);
+            Destroy(other.gameObject);
         }
     }
 }
