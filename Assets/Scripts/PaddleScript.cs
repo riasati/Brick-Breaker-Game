@@ -7,6 +7,7 @@ public class PaddleScript : MonoBehaviour
 {
     public Camera mainCamera;
     public GameManagement gm;
+    private AudioSource audio;
 
     float leftMax = 123;
 
@@ -15,6 +16,7 @@ public class PaddleScript : MonoBehaviour
     void Start()
     {
         mainCamera = FindObjectOfType<Camera>();
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -39,6 +41,7 @@ public class PaddleScript : MonoBehaviour
         if (other.CompareTag("ExtraLifePowerUp"))
         {
             gm.UpdateLives(1);
+            audio.Play();
             Destroy(other.gameObject);
         }
     }

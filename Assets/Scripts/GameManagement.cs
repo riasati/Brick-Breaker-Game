@@ -15,6 +15,7 @@ public class GameManagement : MonoBehaviour
     public Text scoreText;
     public Text liveText;
     public Text noBricksText;
+    public Text highScoreText;
     public bool gameFreeze = false;
     public GameObject gameOverPanel;
     public GameObject nextLevelPanel;
@@ -58,6 +59,16 @@ public class GameManagement : MonoBehaviour
     {
         gameFreeze = true;
         gameOverPanel.SetActive(true);
+        int highScore = PlayerPrefs.GetInt("HIGHSCORE");
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt("HIGHSCORE",score);
+            highScoreText.text = "Congratulation!!!\n" + "New HighScore is: " + score;
+        }
+        else
+        {
+            highScoreText.text = "Previous HighScore is: " + highScore + "\nCan you beat it?!!!";
+        }
     }
 
     public void PlayAgain()

@@ -12,9 +12,10 @@ public class BallScript : MonoBehaviour
     public Rigidbody2D rb;
     public Transform explosion;
     public GameManagement gm;
+    private AudioSource audio;
     void Start()
     {
-        
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -68,6 +69,7 @@ public class BallScript : MonoBehaviour
         if (other.transform.CompareTag("Brick"))
         {
             // Transform newExplosion = Instantiate(explosion, other.transform.position, other.transform.rotation);
+            audio.Play();
             gm.UpdateScores(other.gameObject.GetComponent<BrickScript>().point);
             gm.UpdateNoBricks(-1);
             other.gameObject.GetComponent<BrickScript>().createPowerUp();
